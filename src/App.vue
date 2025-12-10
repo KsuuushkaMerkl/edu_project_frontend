@@ -16,5 +16,6 @@ const auth = useAuthStore()
   max-width: 960px;
   margin: 0 auto;
   padding: 16px;
+  padding-top: 72px;
 }
 </style>

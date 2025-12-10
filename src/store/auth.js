@@ -1,51 +1,40 @@
-import {defineStore} from 'pinia'
-import bcrypt from 'bcryptjs'
-import {save, load, remove} from '../utils/persist'
-
-const DEFAULT_ADMIN = {
-    email: 'admin@example.com',
-    name: 'Администратор',
-    role: 'manager',
-    passwordHash: bcrypt.hashSync('admin', 8)
-}
+import {defineStore} from 'pinia';
+import {save, load, remove} from '../utils/persist';
+import {
+    apiLogin,
+    apiRegister,
+    apiGetMe,
+    apiUpdateProfile,
+    apiChangePassword,
+    apiDeleteMe
+} from '../services/auth';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: load('user', null),
-        users: load('users', [DEFAULT_ADMIN])
+        token: load('token', null)
     }),
     actions: {
-        register({email, name, role, password}) {
-            if (this.users.find(u => u.email === email)) return false
-            const passwordHash = bcrypt.hashSync(password, 8)
-            this.users.push({email, name, role, passwordHash})
-            save('users', this.users)
-            return true
-        },
-        login(email, password) {
-            const u = this.users.find(u => u.email === email)
-            if (!u) return false
-            if (!bcrypt.compareSync(password, u.passwordHash)) return false
-            this.user = {email: u.email, role: u.role, name: u.name}
-            save('user', this.user)
-            return true
-        },
-        logout() {
-            this.user = null;
-            remove('user')
-        },
-        hasRole(...roles) {
-            return this.user && roles.includes(this.user.role)
-        },
-        setRole(email, role) {
-            const u = this.users.find(x => x.email === email)
-            if (!u) return
-            u.role = role
-            save('users', this.users)
-            if (this.user && this.user.email === email) {
-                this.user.role = role
-                save('user', this.user)
+        async login(email, password) {
+            try {
+                const params = new URLSearchParams();
+                params.append('username', email); // передаем как 'username'
+                params.append('password', password);
+
+                const response = await apiLogin(params); // Передаем форму, а не объект
+
+                const data = response.data;
+                this.user = data.user;
+                this.token = data.access_token;
+
+                save('user', this.user);
+                save('token', this.token);
+
+                return true;
+            } catch (e) {
+                console.error('login error', e);
+                return false;
             }
-        }
-    }
-})
+        },
+    },
+});
