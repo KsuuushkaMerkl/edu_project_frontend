@@ -1,3 +1,4 @@
+// src/router.js
 import {createRouter, createWebHistory} from 'vue-router'
 import {useAuthStore} from './store/auth'
 
@@ -7,10 +8,10 @@ import Dashboard from './views/Dashboard.vue'
 import Projects from './views/Projects.vue'
 import Reports from './views/Reports.vue'
 import Board from './views/Board.vue'
-
 import DefectsList from './views/Defects.vue'
 import DefectCreate from './views/DefectCreate.vue'
 import DefectDetails from './views/DefectDetails.vue'
+import Profile from './views/Profile.vue'   // ← вот это
 
 const routes = [
     {path: '/', redirect: '/login'},
@@ -18,7 +19,20 @@ const routes = [
     {path: '/login', name: 'login', component: Login, meta: {public: true, noHeader: true}},
     {path: '/register', name: 'register', component: Register, meta: {public: true, noHeader: true}},
 
-    {path: '/dashboard', name: 'dashboard', component: Dashboard, meta: {roles: ['manager', 'engineer', 'observer']}},
+    {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: Dashboard,
+        meta: {roles: ['manager', 'engineer', 'observer', 'admin']}
+    },
+
+    // профиль — отдельная страница
+    {
+        path: '/profile',
+        name: 'profile',
+        component: Profile,
+        meta: {roles: ['manager', 'engineer', 'observer', 'admin']}
+    },
 
     {path: '/projects', name: 'projects', component: Projects, meta: {roles: ['manager', 'engineer']}},
     {
@@ -45,8 +59,13 @@ const routes = [
         props: true
     },
 
-    {path: '/reports', name: 'reports', component: Reports, meta: {roles: ['manager', 'observer', 'engineer']}},
-    {path: '/board', name: 'board', component: Board, meta: {roles: ['manager', 'engineer', 'observer']}},
+    {
+        path: '/reports',
+        name: 'reports',
+        component: Reports,
+        meta: {roles: ['manager', 'observer', 'engineer', 'admin']}
+    },
+    {path: '/board', name: 'board', component: Board, meta: {roles: ['manager', 'engineer', 'observer', 'admin']}},
 
     {path: '/:pathMatch(.*)*', redirect: '/login'}
 ]

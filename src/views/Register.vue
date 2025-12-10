@@ -11,7 +11,9 @@
           <option value="observer">Наблюдатель</option>
         </select>
         <input v-model="password" type="password" placeholder="Пароль" required/>
-        <button class="w-full">Зарегистрироваться</button>
+        <button class="w-full" :disabled="loading">
+          {{ loading ? 'Регистрируем…' : 'Зарегистрироваться' }}
+        </button>
       </form>
 
       <p v-if="err" class="mt-8 text-bad">Такой email уже существует</p>
@@ -37,19 +39,25 @@ const name = ref('')
 const role = ref('engineer')
 const password = ref('')
 const err = ref(false)
+const loading = ref(false)
 
-function onRegister() {
+async function onRegister() {
   err.value = false
-  const ok = auth.register({
-    email: email.value.trim(),
-    name: name.value.trim(),
-    role: role.value,
-    password: password.value
-  })
-  if (ok) {
-    router.push({path: '/login', query: {registered: '1'}})
-  } else {
-    err.value = true
+  loading.value = true
+  try {
+    const ok = await auth.register({
+      email: email.value.trim(),
+      name: name.value.trim(),
+      role: role.value,
+      password: password.value,
+    })
+    if (ok) {
+      router.push({path: '/login', query: {registered: '1'}})
+    } else {
+      err.value = true
+    }
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -68,22 +76,22 @@ function onRegister() {
 }
 
 .w-full {
-  width: 100%
+  width: 100%;
 }
 
 .mt-8 {
-  margin-top: 8px
+  margin-top: 8px;
 }
 
 .mt-12 {
-  margin-top: 12px
+  margin-top: 12px;
 }
 
 .text-bad {
-  color: var(--bad)
+  color: var(--bad);
 }
 
 .muted-line {
-  color: var(--muted)
+  color: var(--muted);
 }
 </style>

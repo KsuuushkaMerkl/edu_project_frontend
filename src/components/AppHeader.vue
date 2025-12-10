@@ -1,3 +1,4 @@
+<!-- src/components/AppHeader.vue -->
 <template>
   <header class="header">
     <h1>Центр дефектов</h1>
@@ -7,6 +8,7 @@
       <router-link to="/defects">Дефекты</router-link>
       <router-link to="/board">Канбан</router-link>
       <router-link to="/reports">Отчёты</router-link>
+      <router-link to="/profile">Профиль</router-link> <!-- ← это -->
     </nav>
   </header>
 </template>
@@ -23,11 +25,11 @@
 
 nav a {
   color: var(--text-light);
-  margin-left: 1rem
+  margin-left: 1rem;
 }
 
 nav a.router-link-active {
   font-weight: bold;
-  text-decoration: underline
+  text-decoration: underline;
 }
 </style>

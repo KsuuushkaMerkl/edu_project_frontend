@@ -5,11 +5,15 @@
       <form @submit.prevent="onLogin">
         <input v-model="email" placeholder="Email" type="email" required/>
         <input v-model="password" placeholder="Пароль" type="password" required/>
-        <button class="w-full">Войти</button>
+        <button class="w-full" :disabled="loading">
+          {{ loading ? 'Входим…' : 'Войти' }}
+        </button>
       </form>
 
       <p v-if="error" class="mt-8 text-bad">Неверные данные</p>
-      <p v-if="justRegistered" class="mt-8 text-ok">Регистрация успешна — войдите.</p>
+      <p v-if="justRegistered" class="mt-8 text-ok">
+        Регистрация успешна — войдите.
+      </p>
 
       <div class="mt-12 muted-line">
         Нет аккаунта?
@@ -31,12 +35,22 @@ const auth = useAuthStore()
 const email = ref('')
 const password = ref('')
 const error = ref(false)
+const loading = ref(false)
 const justRegistered = computed(() => route.query.registered === '1')
 
-function onLogin() {
-  const ok = auth.login(email.value, password.value)
-  if (ok) router.push('/dashboard')
-  else error.value = true
+async function onLogin() {
+  error.value = false
+  loading.value = true
+  try {
+    const ok = await auth.login(email.value, password.value)
+    if (ok) {
+      router.push('/dashboard')
+    } else {
+      error.value = true
+    }
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -54,26 +68,26 @@ function onLogin() {
 }
 
 .w-full {
-  width: 100%
+  width: 100%;
 }
 
 .mt-8 {
-  margin-top: 8px
+  margin-top: 8px;
 }
 
 .mt-12 {
-  margin-top: 12px
+  margin-top: 12px;
 }
 
 .text-bad {
-  color: var(--bad)
+  color: var(--bad);
 }
 
 .text-ok {
-  color: var(--ok)
+  color: var(--ok);
 }
 
 .muted-line {
-  color: var(--muted)
+  color: var(--muted);
 }
 </style>
