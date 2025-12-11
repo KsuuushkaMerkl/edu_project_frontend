@@ -216,7 +216,7 @@ const confirmOpen = ref(false)
 function toggleSelect() {
   selectionMode.value = !selectionMode.value
   if (!selectionMode.value) {
-    selected.value.clear()   // выходим — чистим выбор
+    selected.value.clear()
     confirmOpen.value = false
   }
 }

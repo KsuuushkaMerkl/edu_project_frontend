@@ -112,7 +112,6 @@ const settings = useSettingsStore()
 
 const p = store.getById(route.params.id)
 
-/* режим редактирования */
 const isEditing = ref(false)
 const form = reactive({name: p?.name || '', description: p?.description || ''})
 
