@@ -2,14 +2,18 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_AUTH_API_URL;
 
-export const apiLogin = async (params) => {
-    const response = await axios.post(`${API_URL}/auth_service/auth/login`, params, {
+export const apiLogin = async ({ email, password }) => {
+    const response = await axios.post(`${API_URL}/auth_service/auth/login`, {
+        email,
+        password,
+    }, {
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded', // Указываем, что это форма
+            'Content-Type': 'application/json',
         },
     });
     return response;
 };
+
 
 export const apiRegister = async ({email, name, role, password}) => {
     const response = await axios.post(`${API_URL}/auth_service/auth/register`, {

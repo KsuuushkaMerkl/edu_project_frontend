@@ -1,4 +1,3 @@
-<!-- src/components/AppHeader.vue -->
 <template>
   <header class="header">
     <h1>Центр дефектов</h1>
@@ -8,7 +7,7 @@
       <router-link to="/defects">Дефекты</router-link>
       <router-link to="/board">Канбан</router-link>
       <router-link to="/reports">Отчёты</router-link>
-      <router-link to="/profile">Профиль</router-link> <!-- ← это -->
+      <router-link to="/profile">Профиль</router-link>
     </nav>
   </header>
 </template>
