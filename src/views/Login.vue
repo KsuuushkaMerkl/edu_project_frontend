@@ -17,7 +17,7 @@
 
       <div class="mt-12 muted-line">
         Нет аккаунта?
-        <router-link to="/register">Зарегистрироваться</router-link>
+        <router-link to="/auth/register">Зарегистрироваться</router-link>
       </div>
     </div>
   </div>

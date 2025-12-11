@@ -1,9 +1,7 @@
-<!-- src/views/Profile.vue -->
 <template>
   <div class="col gap-16">
     <div class="card">
       <h2>Профиль пользователя</h2>
-
       <div v-if="error" class="text-bad" style="margin-top:8px">{{ error }}</div>
       <div v-if="success" class="text-ok" style="margin-top:8px">{{ success }}</div>
 

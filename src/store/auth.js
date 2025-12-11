@@ -17,11 +17,7 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async login(email, password) {
             try {
-                const params = new URLSearchParams();
-                params.append('username', email); // передаем как 'username'
-                params.append('password', password);
-
-                const response = await apiLogin(params); // Передаем форму, а не объект
+                const response = await apiLogin({ email, password });
 
                 const data = response.data;
                 this.user = data.user;
@@ -35,6 +31,6 @@ export const useAuthStore = defineStore('auth', {
                 console.error('login error', e);
                 return false;
             }
-        },
+        }
     },
 });

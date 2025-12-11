@@ -1,4 +1,3 @@
-// src/router.js
 import {createRouter, createWebHistory} from 'vue-router'
 import {useAuthStore} from './store/auth'
 
@@ -11,54 +10,57 @@ import Board from './views/Board.vue'
 import DefectsList from './views/Defects.vue'
 import DefectCreate from './views/DefectCreate.vue'
 import DefectDetails from './views/DefectDetails.vue'
-import Profile from './views/Profile.vue'   // ← вот это
+import Profile from './views/Profile.vue'
 
 const routes = [
     {path: '/', redirect: '/login'},
-
     {path: '/login', name: 'login', component: Login, meta: {public: true, noHeader: true}},
     {path: '/register', name: 'register', component: Register, meta: {public: true, noHeader: true}},
-
     {
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard,
         meta: {roles: ['manager', 'engineer', 'observer', 'admin']}
     },
-
-    // профиль — отдельная страница
     {
         path: '/profile',
         name: 'profile',
         component: Profile,
         meta: {roles: ['manager', 'engineer', 'observer', 'admin']}
     },
-
-    {path: '/projects', name: 'projects', component: Projects, meta: {roles: ['manager', 'engineer']}},
+    {path: '/projects', name: 'projects', component: Projects, meta: {roles: ['manager', 'engineer', 'admin']}},
     {
         path: '/projects/new',
         name: 'project-create',
         component: () => import('./views/ProjectCreate.vue'),
-        meta: {roles: ['manager', 'engineer']}
+        meta: {roles: ['manager', 'engineer', 'admin']}
     },
     {
         path: '/projects/:id',
         name: 'project-details',
         component: () => import('./views/ProjectDetails.vue'),
-        meta: {roles: ['manager', 'engineer', 'observer']},
+        meta: {roles: ['manager', 'engineer', 'observer', 'admin']},
         props: true
     },
-
-    {path: '/defects', name: 'defects', component: DefectsList, meta: {roles: ['manager', 'engineer', 'observer']}},
-    {path: '/defects/new', name: 'defect-create', component: DefectCreate, meta: {roles: ['manager', 'engineer']}},
+    {
+        path: '/defects',
+        name: 'defects',
+        component: DefectsList,
+        meta: {roles: ['manager', 'engineer', 'observer', 'admin']}
+    },
+    {
+        path: '/defects/new',
+        name: 'defect-create',
+        component: DefectCreate,
+        meta: {roles: ['manager', 'engineer', 'admin']}
+    },
     {
         path: '/defects/:id',
         name: 'defect-details',
         component: DefectDetails,
-        meta: {roles: ['manager', 'engineer', 'observer']},
+        meta: {roles: ['manager', 'engineer', 'observer', 'admin']},
         props: true
     },
-
     {
         path: '/reports',
         name: 'reports',
@@ -66,18 +68,24 @@ const routes = [
         meta: {roles: ['manager', 'observer', 'engineer', 'admin']}
     },
     {path: '/board', name: 'board', component: Board, meta: {roles: ['manager', 'engineer', 'observer', 'admin']}},
-
     {path: '/:pathMatch(.*)*', redirect: '/login'}
 ]
 
 const router = createRouter({history: createWebHistory(), routes})
 
 router.beforeEach((to) => {
-    const auth = useAuthStore()
-    if (to.meta.public) return true
-    if (!auth.user) return {path: '/login'}
-    if (to.meta.roles && !to.meta.roles.includes(auth.user.role)) return {path: '/dashboard'}
-    return true
-})
+    const auth = useAuthStore();
+
+    if (to.meta.public) return true;
+
+    if (!auth.user) return {path: '/login'};
+
+    if (to.meta.roles && !to.meta.roles.includes(auth.user.role)) {
+        return {path: '/dashboard'};
+    }
+
+    return true;
+});
+
 
 export default router
