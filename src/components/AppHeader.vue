@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header" v-if="auth.user">
     <h1>Центр дефектов</h1>
     <nav>
       <router-link to="/dashboard">Главная</router-link>
@@ -11,6 +11,12 @@
     </nav>
   </header>
 </template>
+
+<script setup>
+import { useAuthStore } from '../store/auth';
+const auth = useAuthStore();
+</script>
+
 
 <style scoped>
 .header {

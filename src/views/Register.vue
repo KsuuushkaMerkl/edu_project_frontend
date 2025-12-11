@@ -42,24 +42,25 @@ const err = ref(false)
 const loading = ref(false)
 
 async function onRegister() {
-  err.value = false
-  loading.value = true
+  err.value = false;
+  loading.value = true;
   try {
     const ok = await auth.register({
       email: email.value.trim(),
       name: name.value.trim(),
       role: role.value,
       password: password.value,
-    })
+    });
     if (ok) {
-      router.push({path: '/login', query: {registered: '1'}})
+      router.push({ path: '/login', query: { registered: '1' } });
     } else {
-      err.value = true
+      err.value = true;
     }
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
+
 </script>
 
 <style scoped>

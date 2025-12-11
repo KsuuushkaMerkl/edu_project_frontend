@@ -1,36 +1,41 @@
-import {defineStore} from 'pinia';
-import {save, load, remove} from '../utils/persist';
-import {
-    apiLogin,
-    apiRegister,
-    apiGetMe,
-    apiUpdateProfile,
-    apiChangePassword,
-    apiDeleteMe
-} from '../services/auth';
+import { defineStore } from 'pinia';
+import { apiLogin, apiRegister } from '../services/auth';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: load('user', null),
-        token: load('token', null)
+        user: null,
+        token: null,
     }),
     actions: {
         async login(email, password) {
             try {
                 const response = await apiLogin({ email, password });
+                this.user = response.data.user;
+                this.token = response.data.access_token;
 
-                const data = response.data;
-                this.user = data.user;
-                this.token = data.access_token;
-
-                save('user', this.user);
-                save('token', this.token);
+                localStorage.setItem('user', JSON.stringify(this.user));
+                localStorage.setItem('token', this.token);
 
                 return true;
-            } catch (e) {
-                console.error('login error', e);
+            } catch (error) {
+                console.error('Login failed', error);
                 return false;
             }
+        },
+        async register({ email, name, role, password }) {
+            try {
+                const response = await apiRegister({ email, name, role, password });
+                return true;
+            } catch (error) {
+                console.error('Registration failed', error);
+                return false;
+            }
+        },
+        logout() {
+            this.user = null;
+            this.token = null;
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         }
-    },
+    }
 });
