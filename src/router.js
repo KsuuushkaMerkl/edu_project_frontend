@@ -78,14 +78,15 @@ router.beforeEach((to) => {
 
     if (to.meta.public) return true;
 
-    if (!auth.user) return {path: '/login'};
+    if (!auth.user) return { path: '/login' };
 
     if (to.meta.roles && !to.meta.roles.includes(auth.user.role)) {
-        return {path: '/dashboard'};
+        return { path: '/dashboard' };
     }
 
     return true;
 });
+
 
 
 export default router

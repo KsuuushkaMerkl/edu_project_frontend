@@ -3,8 +3,8 @@
     <div class="auth-card card">
       <h2>Вход</h2>
       <form @submit.prevent="onLogin">
-        <input v-model="email" placeholder="Email" type="email" required/>
-        <input v-model="password" placeholder="Пароль" type="password" required/>
+        <input v-model="email" placeholder="Email" type="email" required />
+        <input v-model="password" placeholder="Пароль" type="password" required />
         <button class="w-full" :disabled="loading">
           {{ loading ? 'Входим…' : 'Войти' }}
         </button>
